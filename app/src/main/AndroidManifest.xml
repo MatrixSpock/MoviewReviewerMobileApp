@@ -13,6 +13,10 @@
         android:theme="@style/Theme.MovieReviewer"
         tools:targetApi="31">
         <activity
+            android:name=".MovieReviewer"
+            android:exported="false"
+            android:theme="@style/Theme.MovieReviewer" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
