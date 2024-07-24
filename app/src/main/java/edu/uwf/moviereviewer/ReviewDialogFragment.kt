@@ -27,7 +27,7 @@ class ReviewDialogFragment: DialogFragment() {
         return AlertDialog.Builder(requireActivity())
             .setTitle(R.string.Review)
             .setView(nameEditText)
-            .setView(reviewEditText)
+            .setView(reviewEditText,)
             .setPositiveButton(R.string.add_review) { dialog, whichButton ->
                 // Notify listener
                 val name = nameEditText.text.toString()
