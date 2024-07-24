@@ -6,7 +6,5 @@ import edu.uwf.moviereviewer.model.Review
 
 @Database(entities = [Review::class], version = 1)
 abstract class ReviewDatabase : RoomDatabase() {
-
     abstract fun reviewDao(): ReviewDao
-
 }

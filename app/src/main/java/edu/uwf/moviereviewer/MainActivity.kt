@@ -1,11 +1,8 @@
 package edu.uwf.moviereviewer
+
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,99 +11,71 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import edu.uwf.moviereviewer.model.Review
 import edu.uwf.moviereviewer.viewmodel.ReviewListViewModel
 
-class MainActivity  : AppCompatActivity(),
-    ReviewDialogFragment.OnReviewEnteredListener {
+class MainActivity : AppCompatActivity(), ReviewDialogFragment.OnReviewEnteredListener {
 
-    private var reviewAdapter = ReviewAdapter(mutableListOf())
-    private lateinit var subjectRecyclerView: RecyclerView
-    private lateinit var subjectColors: IntArray
-    private val reviewListViewModel: ReviewListViewModel by lazy {
-        ViewModelProvider(this).get(ReviewListViewModel::class.java)
-    }
+    private lateinit var reviewAdapter: ReviewAdapter
+    private lateinit var reviewRecyclerView: RecyclerView
+    private lateinit var reviewListViewModel: ReviewListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_review)
 
+        reviewListViewModel = ViewModelProvider(this).get(ReviewListViewModel::class.java)
 
+        setupRecyclerView()
+        setupFab()
+        setupSearchView()
 
-        subjectColors = resources.getIntArray(R.array.subjectColors)
-
-        findViewById<FloatingActionButton>(R.id.add_review_button).setOnClickListener {
-            addReviewClick() }
-
-        subjectRecyclerView = findViewById(R.id.review_recycler_view)
-        subjectRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
-
-        // Show the subjects
         reviewListViewModel.reviewListLiveData.observe(this, { reviewList ->
             updateUI(reviewList)
-        },)
+        })
     }
 
-    private fun updateUI(subjectList: List<Review>) {
-        reviewAdapter = ReviewAdapter(subjectList as MutableList<Review>)
-        subjectRecyclerView.adapter = reviewAdapter
-    }
-
-    override fun onReviewEntered(reviewText: String) {
-        if (reviewText.isNotEmpty()) {
-            val review = Review(0, reviewText)
-            reviewListViewModel.addReview(review)
-
-
-            Toast.makeText(this, "Added $reviewText", Toast.LENGTH_SHORT).show()
+    private fun setupRecyclerView() {
+        reviewRecyclerView = findViewById(R.id.review_recycler_view)
+        reviewRecyclerView.layoutManager = LinearLayoutManager(this)
+        reviewAdapter = ReviewAdapter(emptyList()) { review ->
+            val intent = Intent(this, MovieDetailActivity::class.java)
+            intent.putExtra("REVIEW_ID", review.id)
+            startActivity(intent)
         }
+        reviewRecyclerView.adapter = reviewAdapter
     }
 
-    private fun addReviewClick() {
-        val dialog = ReviewDialogFragment()
-        dialog.show(supportFragmentManager, "subjectDialog")
-    }
-
-    private inner class ReviewHolder(inflater: LayoutInflater, parent: ViewGroup?) :
-        RecyclerView.ViewHolder(inflater.inflate(R.layout.recycler_view_items, parent, false)),
-        View.OnClickListener {
-
-        private var review: Review? = null
-        private val reviewTextView: TextView
-
-        init {
-            itemView.setOnClickListener(this)
-            reviewTextView = itemView.findViewById(R.id.review_text_view)
-        }
-
-        fun bind(review: Review, position: Int) {
-            this.review = review
-            reviewTextView.text = this.review!!.name
-
-            // Make the background color dependent on the length of the subject string
-            val colorIndex = this.review!!.review.length % subjectColors.size
-            reviewTextView.setBackgroundColor(subjectColors[colorIndex])
-        }
-
-        override fun onClick(view: View) {
-
-
-
-
+    private fun setupFab() {
+        findViewById<FloatingActionButton>(R.id.add_review_button).setOnClickListener {
+            val dialog = ReviewDialogFragment()
+            dialog.show(supportFragmentManager, "reviewDialog")
         }
     }
 
-    private inner class ReviewAdapter(private val reviewList: MutableList<Review>) :
-        RecyclerView.Adapter<ReviewHolder>() {
+    private fun setupSearchView() {
+        val searchView = findViewById<SearchView>(R.id.search_view)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                reviewListViewModel.setFilter(query)
+                return true
+            }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewHolder {
-            val layoutInflater = LayoutInflater.from(applicationContext)
-            return ReviewHolder(layoutInflater, parent)
-        }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                reviewListViewModel.setFilter(newText)
+                return true
+            }
+        })
+    }
 
-        override fun onBindViewHolder(holder: ReviewHolder, position: Int) {
-            holder.bind(reviewList[position], position)
+    private fun updateUI(reviewList: List<Review>) {
+        reviewAdapter.updateReviews(reviewList)
+        if (reviewList.isEmpty()) {
+            // Show "No reviews found" message
+        } else {
+            // Hide "No reviews found" message
         }
+    }
 
-        override fun getItemCount(): Int {
-            return reviewList.size
-        }
+    override fun onReviewEntered(name: String, review: String, rating: Float) {
+        val newReview = Review(name = name, review = review, rating = rating)
+        reviewListViewModel.addReview(newReview)
     }
 }

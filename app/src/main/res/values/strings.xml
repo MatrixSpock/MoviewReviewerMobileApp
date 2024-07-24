@@ -1,15 +1,8 @@
 <resources>
-    <string name="app_name">Movie reviews</string>
-    <string name="review">review</string>
-    <string name="add_review">add review</string>
-    <string name="Review">New review?</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-
-
+    <string name="app_name">Movie Reviewer</string>
+    <string name="add_review">Add Review</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_review">Delete Review</string>
+    <string name="no_reviews_found">No reviews found</string>
 </resources>
