@@ -1,4 +1,5 @@
 package edu.uwf.moviereviewer
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -85,7 +86,6 @@ class MainActivity  : AppCompatActivity(),
         }
 
         override fun onClick(view: View) {
-            // Start QuestionActivity with the selected subject
 
 
 

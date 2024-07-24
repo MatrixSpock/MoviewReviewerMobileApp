@@ -16,15 +16,23 @@ class ReviewDialogFragment: DialogFragment() {
     private lateinit var listener: OnReviewEnteredListener
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val nameEditText = EditText(requireActivity())
+        nameEditText.inputType = InputType.TYPE_CLASS_TEXT
+        nameEditText.maxLines = 1
+
         val reviewEditText = EditText(requireActivity())
         reviewEditText.inputType = InputType.TYPE_CLASS_TEXT
         reviewEditText.maxLines = 1
+
         return AlertDialog.Builder(requireActivity())
             .setTitle(R.string.Review)
+            .setView(nameEditText)
             .setView(reviewEditText)
             .setPositiveButton(R.string.add_review) { dialog, whichButton ->
                 // Notify listener
+                val name = nameEditText.text.toString()
                 val review = reviewEditText.text.toString()
+                listener.onReviewEntered(name.trim())
                 listener.onReviewEntered(review.trim())
             }
 
