@@ -6,22 +6,33 @@
     android:id="@+id/item_list_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <TextView
         android:id="@+id/review_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="166dp"
+        android:layout_height="131dp"
 
-        android:padding="10dp"
         android:layout_gravity="center"
-        android:gravity="center" />
+        android:layout_marginTop="420dp"
+        android:gravity="center"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.326"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/movie_list"
         android:name="edu.uwf.moviereviewer.ItemListFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_width="307dp"
+        android:layout_height="428dp"
         app:layoutManager="LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="@+id/review_text_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.153"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         tools:context="edu.uwf.moviereviewer.MainActivity"
         tools:listitem="@layout/list_item_band" />
 </androidx.constraintlayout.widget.ConstraintLayout>

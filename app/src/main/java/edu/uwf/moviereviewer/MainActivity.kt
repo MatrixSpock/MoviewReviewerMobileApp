@@ -7,7 +7,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import edu.uwf.moviereviewer.model.Review
@@ -35,7 +35,7 @@ class MainActivity  : AppCompatActivity(),
             addReviewClick() }
 
         subjectRecyclerView = findViewById(R.id.review_recycler_view)
-        subjectRecyclerView.layoutManager = GridLayoutManager(applicationContext, 2)
+        subjectRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
 
         // Show the subjects
         reviewListViewModel.reviewListLiveData.observe(this, { reviewList ->
@@ -76,8 +76,8 @@ class MainActivity  : AppCompatActivity(),
         }
 
         fun bind(review: Review, position: Int) {
-            this.review = this.review
-            reviewTextView.text = this.review!!.review
+            this.review = review
+            reviewTextView.text = this.review!!.name
 
             // Make the background color dependent on the length of the subject string
             val colorIndex = this.review!!.review.length % subjectColors.size
